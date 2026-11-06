@@ -11,31 +11,36 @@
 using namespace std;
 
 // --- Graph and PersonNode Classes ---
-class PersonNode; // Forward declaration
+class PersonNode; // Forward declaration tells compiler that this class exists
 
+//A(PersonNode. The person) : B(friendHead. One friend not the person) -> C -> D(different FriendNode. FriendTail) (three separate FriendNodes)
+
+//One box in the list. Edges
 class FriendNode {
 public:
-    PersonNode* person;
-    FriendNode* next;
-    FriendNode* previous;
+    PersonNode* person; //friend of a specific entry
+    FriendNode* next; //visually it goes across. B's next points to C.
+    FriendNode* previous; //C's previous pointer back to points to B. (Undirected graph)
 
-    FriendNode() : person(nullptr), next(nullptr), previous(nullptr) {}
+    FriendNode() : person(nullptr), next(nullptr), previous(nullptr) {} //constructure for pointers to point to null
 };
 
+//One person in the network. Each PersonNode is a vertex in the graph
 class PersonNode {
 public:
     string name;
-    FriendNode* friendsHead;
-    FriendNode* friendsTail;
-    PersonNode* next;
+    FriendNode* friendsHead; //first entry in this person's friend list
+    FriendNode* friendsTail; //
+    PersonNode* next; //visually goes down. Moves from row A to row B. Connects top(head) to bottom(tail)
     PersonNode* previous;
 
-    PersonNode() : friendsHead(nullptr), friendsTail(nullptr), next(nullptr), previous(nullptr) {}
+    PersonNode() : friendsHead(nullptr), friendsTail(nullptr), next(nullptr), previous(nullptr) {} //constructure for pointers to point to null
 };
 
+//holds vertices (PersonNode) and edges (FriendNode)
 class Graph {
 public:
-    PersonNode* head;
+    PersonNode* head; //starting point. The first person in the main list
     PersonNode* tail;
 
     Graph() : head(nullptr), tail(nullptr) {}
