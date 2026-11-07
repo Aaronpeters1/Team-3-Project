@@ -23,41 +23,26 @@ public:
     }
 
     void addPerson(const string& name) {
-        if (findPerson(name) != -1) {
-            return;
-        }
+        if (findPerson(name) != -1) return;
 
         personIndex[name] = static_cast<int>(names.size());
         names.push_back(name);
         adjacency.emplace_back();
     }
 
-    void addFriendOneWay(int personIndexValue, int friendIndexValue) {
-        if (personIndexValue < 0 || friendIndexValue < 0) {
-            return;
-        }
+    void addFriendOneWay(int person, int friendPerson) {
+        if (person < 0 || friendPerson < 0) return;
+        if (person >= static_cast<int>(adjacency.size()) || friendPerson >= static_cast<int>(adjacency.size())) return;
+        if (find(adjacency[person].begin(), adjacency[person].end(), friendPerson) != adjacency[person].end()) return;
 
-        if (personIndexValue >= static_cast<int>(adjacency.size()) ||
-            friendIndexValue >= static_cast<int>(adjacency.size())) {
-            return;
-        }
-
-        if (find(adjacency[personIndexValue].begin(),
-                 adjacency[personIndexValue].end(),
-                 friendIndexValue) != adjacency[personIndexValue].end()) {
-            return;
-        }
-
-        adjacency[personIndexValue].push_back(friendIndexValue);
+        adjacency[person].push_back(friendPerson);
     }
 
     void addFriendship(const string& a, const string& b) {
         int personA = findPerson(a);
         int personB = findPerson(b);
 
-        if (personA == -1 || personB == -1) {
-            return;
-        }
+        if (personA == -1 || personB == -1) return;
 
         addFriendOneWay(personA, personB);
         addFriendOneWay(personB, personA);
@@ -72,15 +57,11 @@ public:
 
         string line;
         while (getline(file, line)) {
-            if (!line.empty() && line.back() == '\r') {
-                line.pop_back();
-            }
+            if (!line.empty() && line.back() == '\r') line.pop_back();
 
             istringstream words(line);
             string person;
-            if (!(words >> person)) {
-                continue;
-            }
+            if (!(words >> person)) continue;
 
             addPerson(person);
 
@@ -90,7 +71,6 @@ public:
                 addFriendship(person, other);
             }
         }
-
         return true;
     }
 
@@ -290,6 +270,10 @@ int main() {
 
     cout << "\nTask 3:" << endl;
     visitAllAndReturn(g, "A");
+
+    cout << "\nTask 1:" << endl;
+    question1(g, "A", "D", 3);
+}
 
     cout << "\nTask 1:" << endl;
     question1(g, "A", "D", 3);
