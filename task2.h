@@ -1,11 +1,11 @@
 #ifndef TASK2_H
 #define TASK2_H
 
-#include <algorithm>
 #include <iostream>
 #include <queue>
-#include <string>
 #include <vector>
+#include <string>
+#include <algorithm>
 #include "graph.cpp"
 
 using namespace std;
@@ -24,11 +24,13 @@ public:
     }
 };
 
+// Return the shortest path between two people as a list of indices
 vector<int> shortestPath(Graph& graph, const string& startName, const string& endName) {
     int start = graph.findPerson(startName);
     int end = graph.findPerson(endName);
 
     vector<int> path;
+
     if (start == -1 || end == -1) {
         return path;
     }
@@ -55,7 +57,7 @@ vector<int> shortestPath(Graph& graph, const string& startName, const string& en
         }
     }
 
-    if (parent[end] == -1 && end != start) {
+    if (parent[end] == -1) {
         return path;
     }
 
@@ -65,11 +67,12 @@ vector<int> shortestPath(Graph& graph, const string& startName, const string& en
         current = parent[current];
     }
     path.push_back(start);
-    reverse(path.begin(), path.end());
 
+    reverse(path.begin(), path.end());
     return path;
 }
 
+// Add a path without repeating the connecting person
 void addPath(vector<int>& fullPath, const vector<int>& part) {
     for (size_t i = 0; i < part.size(); ++i) {
         if (!fullPath.empty() && i == 0) {
@@ -79,7 +82,9 @@ void addPath(vector<int>& fullPath, const vector<int>& part) {
     }
 }
 
+// Solve Task 2
 void question2(Graph& graph, const string& A, const string& B, const string& C, const string& D) {
+    // Option 1: A -> B -> C -> D
     vector<int> AB = shortestPath(graph, A, B);
     vector<int> BC = shortestPath(graph, B, C);
     vector<int> CD = shortestPath(graph, C, D);
@@ -91,6 +96,7 @@ void question2(Graph& graph, const string& A, const string& B, const string& C, 
         addPath(route1, CD);
     }
 
+    // Option 2: A -> C -> B -> D
     vector<int> AC = shortestPath(graph, A, C);
     vector<int> CB = shortestPath(graph, C, B);
     vector<int> BD = shortestPath(graph, B, D);
@@ -108,6 +114,7 @@ void question2(Graph& graph, const string& A, const string& B, const string& C, 
     }
 
     vector<int> bestRoute = route1;
+
     if (route1.empty() || (!route2.empty() && route2.size() < route1.size())) {
         bestRoute = route2;
     }
